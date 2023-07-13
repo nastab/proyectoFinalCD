@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "e52aca5d-fade-4631-bac3-16f95a53478a",
+		"name": "Clave adinamica",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8270064"
+	},
+	"item": [
+		{
+			"name": "get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/route/getAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"route",
+						"getAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inscribir CD",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sharedkey\": \"01123456\",\r\n    \"consumidor\": \"canal1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/route/inscribir/cd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"route",
+						"inscribir",
+						"cd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generar CD",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sharedkey\": \"01123456\",\r\n    \"consumidor\": \"canal1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/route/generar/cd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"route",
+						"generar",
+						"cd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validar CD",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sharedkey\": \"01123456\",\r\n    \"consumidor\": \"canal1\",\r\n    \"otp\": \"736860\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/route/validar/cd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"route",
+						"validar",
+						"cd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eliminar CD",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sharedkey\": \"01123456\",\r\n    \"consumidor\": \"canal1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/route/eliminar/cd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"route",
+						"eliminar",
+						"cd"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
