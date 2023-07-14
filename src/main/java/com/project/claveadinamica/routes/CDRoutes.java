@@ -5,6 +5,7 @@ import com.project.claveadinamica.repository.model.RequestGenerar;
 import com.project.claveadinamica.repository.model.RequestInscribir;
 import com.project.claveadinamica.repository.model.RequestValidar;
 import com.project.claveadinamica.service.CDService;
+import com.project.claveadinamica.usecases.PublicResponseValidateUseCase;
 import com.project.claveadinamica.validation.ObjectValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -67,11 +68,11 @@ public class CDRoutes {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> validarCD(){
+    public RouterFunction<ServerResponse> validarCD(PublicResponseValidateUseCase useCase){
         return route(POST("route/validar/cd"),
                 request -> request.bodyToMono(RequestValidar.class)
                         .doOnNext(objectValidator::validate)
-                        .flatMap(r -> service.validarClave(r))
+                        .flatMap(r -> useCase.apply(r))
                         .flatMap(result -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(Map.of("ok",result)))
                         .onErrorResume(error -> ServerResponse.badRequest().contentType(MediaType.APPLICATION_JSON)
