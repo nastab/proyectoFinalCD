@@ -5,6 +5,9 @@ import com.project.claveadinamica.repository.model.RequestGenerar;
 import com.project.claveadinamica.repository.model.RequestInscribir;
 import com.project.claveadinamica.repository.model.RequestValidar;
 import com.project.claveadinamica.service.CDService;
+import com.project.claveadinamica.usecases.PublicResponseDeleteUseCase;
+import com.project.claveadinamica.usecases.PublicResponseGenerateUseCase;
+import com.project.claveadinamica.usecases.PublicResponseValidateUseCase;
 import com.project.claveadinamica.validation.ObjectValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,11 +58,11 @@ public class CDRoutes {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> eliminarCD(){
+    public RouterFunction<ServerResponse> eliminarCD(PublicResponseDeleteUseCase useCase){
         return route(POST("route/eliminar/cd"),
                 request -> request.bodyToMono(RequestInscribir.class)
                         .doOnNext(objectValidator::validate)
-                        .flatMap(r -> service.eliminarCD(r))
+                        .flatMap(useCase::apply)
                         .flatMap(result -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(result))
                         .onErrorResume(error -> ServerResponse.badRequest().contentType(MediaType.APPLICATION_JSON)
@@ -67,11 +70,11 @@ public class CDRoutes {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> validarCD(){
+    public RouterFunction<ServerResponse> validarCD(PublicResponseValidateUseCase useCase){
         return route(POST("route/validar/cd"),
                 request -> request.bodyToMono(RequestValidar.class)
                         .doOnNext(objectValidator::validate)
-                        .flatMap(r -> service.validarClave(r))
+                        .flatMap(useCase::apply)
                         .flatMap(result -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(Map.of("ok",result)))
                         .onErrorResume(error -> ServerResponse.badRequest().contentType(MediaType.APPLICATION_JSON)
@@ -79,22 +82,13 @@ public class CDRoutes {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> generarCD(){
+    public RouterFunction<ServerResponse> generarCD(PublicResponseGenerateUseCase useCase){
         return route(POST("route/generar/cd"),
                 request -> request.bodyToMono(RequestGenerar.class)
                         .doOnNext(objectValidator::validate)
-                        .flatMap(r -> service.generarClave(r))
+                        .flatMap(useCase::apply)
                         .flatMap(result -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(result))
                         .onErrorResume(error -> ServerResponse.badRequest().contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(Map.of("error", error.getMessage()))));
     }
-
-    /*@Bean
-    public RouterFunction<ServerResponse> getUserWithTasks(){
-        return route(GET("route/get/user/{userId}"),
-                request -> service.findAuthorWithAllHisTasks(Integer
-                                .parseInt(request.pathVariable("userId")))
-                        .flatMap(author -> ServerResponse.ok().bodyValue(author)));
-    }*/
-
 }
