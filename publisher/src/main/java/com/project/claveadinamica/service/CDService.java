@@ -66,7 +66,7 @@ public class CDService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El cliente no esta registrado")))
                 .flatMap(cd -> {
                     if (cd.getFechaGeneracion() != null
-                            && cd.getFechaGeneracion().plusMinutes(this.expirationTime).isAfter(LocalDateTime.now())) {
+                            && LocalDateTime.now().isBefore(cd.getFechaGeneracion().plusMinutes(this.expirationTime))) {
                         if (cd.getOtp().equals(request.getOtp()) && !cd.isValidated()) {
                             cd.setOtp(null);
                             cd.setFechaGeneracion(null);
