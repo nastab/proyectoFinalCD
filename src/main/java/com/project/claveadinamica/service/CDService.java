@@ -45,7 +45,7 @@ public class CDService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El cliente no esta registrado")))
                 .flatMap(cd -> {
                     repository.delete(cd).subscribe();
-                    return Mono.just(Map.of("ok", "Registro eliminado correctamente"));
+                    return Mono.just(Map.of("ok", "Registro eliminado correctamente - " + cd));
                 });
     }
 
@@ -55,6 +55,7 @@ public class CDService {
                 .flatMap(cd -> {
                     cd.setOtp(generatingRandomNumeric(this.size));
                     cd.setFechaGeneracion(LocalDateTime.now());
+                    cd.setValidated(false);
                     repository.save(cd).subscribe();
                     return Mono.just(new ResponseGenerar(cd.getSharedkey(), cd.getConsumidor(), cd.getOtp()));
                 });
@@ -65,25 +66,25 @@ public class CDService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El cliente no esta registrado")))
                 .flatMap(cd -> {
                     if (cd.getFechaGeneracion() != null
-                            && cd.getFechaGeneracion().isAfter(LocalDateTime.now().minusMinutes(this.expirationTime))) {
+                            && cd.getFechaGeneracion().plusMinutes(this.expirationTime).isAfter(LocalDateTime.now())) {
                         if (cd.getOtp().equals(request.getOtp()) && !cd.isValidated()) {
                             cd.setOtp(null);
                             cd.setFechaGeneracion(null);
                             cd.setIntentos(0);
                             cd.setValidated(true);
                             repository.save(cd).subscribe();
-                            return Mono.just("El código es válido");
+                            return Mono.just("El código es válido - " + cd);
                         }
                         var intentos = cd.getIntentos() == null ? 0 : cd.getIntentos();
                         cd.setIntentos(intentos + 1);
                         repository.save(cd).subscribe();
-                        return Mono.error(new Exception("El código no es válido"));
+                        return Mono.error(new Exception("El código no es válido - " + cd));
 
                     } else {
                         var intentos = cd.getIntentos() == null ? 0 : cd.getIntentos();
                         cd.setIntentos(intentos + 1);
                         repository.save(cd).subscribe();
-                        return Mono.error(new Exception("El código no es válido"));
+                        return Mono.error(new Exception("El código no es válido - " + cd));
                     }
                 });
     }
